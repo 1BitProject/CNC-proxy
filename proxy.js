@@ -60,6 +60,21 @@ const server = net.createServer((client) => {
       client.destroy();
     }
   });
+
+  client.on('data', (data) => { //Kill a connection if transmi GET data, may kill the connection if the attack method is GET-XXXXXX
+    if (data.toString().includes('GET')) {
+      console.log(`Killing connection from ${clientIp} due to GET data: ${data.toString()}`);
+      client.destroy();
+    }
+  });
+
+  client.on('data', (data) => { //Kill a connection if transmi POST data, may kill the connection if the attack method is POST-XXXXXX
+    if (data.toString().includes('POST')) {
+      console.log(`Killing connection from ${clientIp} due to POST data: ${data.toString()}`);
+      client.destroy();
+    }
+  });
+
 });
 
 server.listen(FrontPort, () => {
